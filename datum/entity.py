@@ -8,6 +8,8 @@ from pydantic import Field, BaseModel
 from typing import Any
 from typing_extensions import Annotated
 
+from mediators.actions import Attack
+
 
 class Entity(BaseModel):
     name: str
@@ -21,23 +23,18 @@ class Entity(BaseModel):
         self.current_health = self.maximum_health
         self.experience = non_recursively_calculate_total_exp_at_level(self.level)
 
-    def attack(self, target_mob: 'Entity'):
+    def attack(self, target_mobs: list['Mob']):
         """
         Simulate an attack by this mob on another mob.
 
         Args:
-            target_mob (Mob): The target mob to attack.
+            target_mobs (Mob): The target mob to attack.
 
         Returns:
             str: A message describing the attack outcome.
         """
-        target_mob.current_health -= self.damage
-        if target_mob.current_health <= 0:
-            target_mob.current_health = 0
-        if target_mob.current_health <= 0:
-            return f"{self.name} defeated {target_mob.name}!"
-        else:
-            return f"{self.name} attacked {target_mob.name}. {target_mob.name}'s health: {target_mob.current_health}"
+        Attack.execute(self, target_mobs)
+
 
     def level_up(self, enemy_level: int):
         self.experience += calculate_exp_gained_from_enemy_level(enemy_level)
