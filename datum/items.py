@@ -1,30 +1,31 @@
-from pydantic import Field
+from pydantic import Field, BaseModel
 from pydantic.dataclasses import dataclass
 from enum import Enum, auto
 
 from typing_extensions import Annotated
 
 
-class MetadataType(Enum):
+class MetadataType(Enum):  # TODO: Deliberate Whether To Use auto() or fill in manually
     HealthRestoration = auto()
     HealthMultiplier = auto()
     UltimateEnabler = auto()
     BaseDamage = auto()
-    DamageMultiplier = auto()  # TODO: Possible an ATTACK multiplier, not a DMG multiplier
+    DamageMultiplier = auto()  # TODO: Possibly an ATTACK multiplier, not a DMG multiplier. Ask INIW
     AOEDamage = auto()  # by default, this is the damage multiplier for every other enemy
     UltimateDamageMultiplier = auto()
     UltimateAOEDamageMultiplier = auto()
     DamageDebuffToEnemy = auto()
 
 
-@dataclass
-class ItemTypeMetadata:
+class ItemTypeMetadata(BaseModel):
     item_type: MetadataType
     data: float | int
 
+    class Config:
+        use_enum_values = True
 
-@dataclass
-class Item:
+
+class Item(BaseModel):
     id: int
     name: str
     description: Annotated[str, Field(default=None)]
@@ -33,28 +34,23 @@ class Item:
     metadata: list[ItemTypeMetadata]
 
 
-@dataclass
-class Inventory:
-    id: int
-    items: list[Item]
-
 #########
 # Weapons
 #########
 
 
 short_sword = Item(id=1, name='Short Sword', price=10, metadata=[
-    ItemTypeMetadata(MetadataType.BaseDamage, 50),
-    ItemTypeMetadata(MetadataType.DamageMultiplier, 1.2),
-    ItemTypeMetadata(MetadataType.UltimateDamageMultiplier, 3),  # not 300% but 3
-    ItemTypeMetadata(MetadataType.DamageDebuffToEnemy, 0.1)  # should lower enemy health by 10%
+    ItemTypeMetadata(item_type=MetadataType.BaseDamage, data=50),
+    ItemTypeMetadata(item_type=MetadataType.DamageMultiplier, data=1.2),
+    ItemTypeMetadata(item_type=MetadataType.UltimateDamageMultiplier, data=3),  # not 300% but 3
+    ItemTypeMetadata(item_type=MetadataType.DamageDebuffToEnemy, data=0.1)  # should lower enemy health by 10%
 ])
 
 long_sword = Item(id=2, name='Long Sword', price=50, metadata=[
-    ItemTypeMetadata(MetadataType.BaseDamage, 75),
-    ItemTypeMetadata(MetadataType.DamageMultiplier, 1),
-    ItemTypeMetadata(MetadataType.AOEDamage, 0.5),
-    ItemTypeMetadata(MetadataType.UltimateAOEDamageMultiplier, 2)
+    ItemTypeMetadata(item_type=MetadataType.BaseDamage, data=75),
+    ItemTypeMetadata(item_type=MetadataType.DamageMultiplier, data=1),
+    ItemTypeMetadata(item_type=MetadataType.AOEDamage, data=0.5),
+    ItemTypeMetadata(item_type=MetadataType.UltimateAOEDamageMultiplier, data=2)
 ])
 
 #########
@@ -63,25 +59,25 @@ long_sword = Item(id=2, name='Long Sword', price=50, metadata=[
 
 
 small_health_potion = Item(id=3, name='Small Health Potion', price=5, metadata=[
-    ItemTypeMetadata(MetadataType.HealthRestoration, 0.25)
+    ItemTypeMetadata(item_type=MetadataType.HealthRestoration, data=0.25)
 ])
 
 medium_health_potion = Item(id=4, name='Medium Health Potion', price=10, metadata=[
-    ItemTypeMetadata(MetadataType.HealthRestoration, 0.5)
+    ItemTypeMetadata(item_type=MetadataType.HealthRestoration, data=0.5)
 ])
 
 large_health_potion = Item(id=5, name='Large Health Potion', price=20, metadata=[
-    ItemTypeMetadata(MetadataType.HealthRestoration, 1)
+    ItemTypeMetadata(item_type=MetadataType.HealthRestoration, data=1)
 ])
 
 ult_potion = Item(id=6, name='Ultimate Potion', price=50, metadata=[
-    ItemTypeMetadata(MetadataType.UltimateEnabler, 1)  # 1 means true
+    ItemTypeMetadata(item_type=MetadataType.UltimateEnabler, data=1)  # 1 means true
 ])
 
 double_damage_potion = Item(id=7, name='Damage Double Potion', price=15, metadata=[
-    ItemTypeMetadata(MetadataType.DamageMultiplier, 2)
+    ItemTypeMetadata(item_type=MetadataType.DamageMultiplier, data=2)
 ])
 
 absorption_potion = Item(id=9, name='Absorption Potion', price=20, metadata=[
-    ItemTypeMetadata(MetadataType.HealthMultiplier, 2)
+    ItemTypeMetadata(item_type=MetadataType.HealthMultiplier, data=2)
 ])

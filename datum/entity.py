@@ -60,4 +60,4 @@ class Mob(Entity):
 class Player(Entity):
     inventory_id: int
     equipped_items: list[Item]  # TODO: Add Validation If The Item Is In Inventory
-    balance: int
+    gold_balance: int

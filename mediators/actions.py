@@ -18,17 +18,20 @@ class Attack(Actions):
         self.player = player
         self.enemies = enemies
 
-    def calculate_player_damage(self):
-        base_damage = self.player.damage
-
+    @staticmethod
+    def calculate_player_damage(player):
+        base_damage = player.damage
+        # TODO: Add damage calculation for single target and aoe
 
     def execute(self):
         player = self.player
+        # TODO: What is the distinction between single target attack and AOE
+        # TODO: How do you target a mob?
         target_mob, = [mob for mob in self.enemies if mob.is_target_mob is True]
-        target_mob.current_health -= player.damage
+        target_mob.current_health -= self.calculate_player_damage(player)
         if target_mob.current_health <= 0:
             target_mob.current_health = 0
         if target_mob.current_health <= 0:
-            return f"{self.name} defeated {target_mob.name}!"
+            return f"{player.name} defeated {target_mob.name}!"
         else:
-            return f"{self.name} attacked {target_mob.name}. {target_mob.name}'s health: {target_mob.current_health}"
+            return f"{player.name} attacked {target_mob.name}. {target_mob.name}'s health: {target_mob.current_health}"
