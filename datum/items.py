@@ -38,7 +38,7 @@ class Item(BaseModel):
 #########
 
 
-short_sword = Item(id=1, name='Short Sword', price=250, metadata=[
+short_sword = Item(id=1, name='Short Sword', price=251, metadata=[
     ItemTypeMetadata(item_type=MetadataType.BaseDamage, data=50),
     ItemTypeMetadata(item_type=MetadataType.DamageMultiplier, data=1.2),
     ItemTypeMetadata(item_type=MetadataType.UltimateDamageMultiplier, data=3),  # not 300% but 3
