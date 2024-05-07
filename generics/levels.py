@@ -1,11 +1,11 @@
 from math import floor, sqrt
 
 
-COMMON_DIFFERENCE_PER_LEVEL = 125
+COMMON_DIFFERENCE_PER_LEVEL = 40
 
 
 def calculate_exp_gained_from_enemy_level(enemy_level: int) -> int:
-    return enemy_level * 10 + 25
+    return enemy_level * 35
 
 
 def calculate_total_exp_after_exp_gain(current_experience: int, enemy_level: int) -> int:
@@ -16,7 +16,7 @@ def calculate_required_exp_for_level(level: int) -> int:
     return int(COMMON_DIFFERENCE_PER_LEVEL * level)
 
 
-def recursively_calculate_total_exp_at_level(level: int) -> float:
+def recursively_calculate_total_exp_at_level(level: int) -> int:
     if level <= 0:
         if level < 0:
             raise ValueError(f'Level Cannot Be Smaller Than Zero! Level: {level}')
@@ -24,7 +24,7 @@ def recursively_calculate_total_exp_at_level(level: int) -> float:
     return int(level * COMMON_DIFFERENCE_PER_LEVEL + recursively_calculate_total_exp_at_level(level - 1))
 
 
-def non_recursively_calculate_total_exp_at_level(level: int) -> float:
+def non_recursively_calculate_total_exp_at_level(level: int) -> int:
     """
     A Quadratic Equation That Calculates The Total EXP Accrued At Level :level:.
 
@@ -34,7 +34,7 @@ def non_recursively_calculate_total_exp_at_level(level: int) -> float:
     """
     if level < 0:
         raise ValueError(f'Level Cannot Be Smaller Than Zero! Level: {level}')
-    return COMMON_DIFFERENCE_PER_LEVEL / 2 * level ** 2 + COMMON_DIFFERENCE_PER_LEVEL / 2 * level
+    return int(COMMON_DIFFERENCE_PER_LEVEL / 2 * level ** 2 + COMMON_DIFFERENCE_PER_LEVEL / 2 * level)
 
 
 def calculate_level_from_total_exp(experience: float) -> int:

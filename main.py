@@ -1,15 +1,15 @@
 import random
-from datum.entity import Entity
+from datum.entity import Mob, Entity
 
 
 class Game:
     def __init__(self):
         # Define the mobs
-        self.mob1 = Entity(name="Goblin", damage=10, maximum_health=50, level=1)
-        self.mob2 = Entity(name="Orc", damage=15, maximum_health=70, level=1)
-        self.mob3 = Entity(name="Ogre", damage=15, maximum_health=150, level=1)
-        self.mob4 = Entity(name="slime", damage=5, maximum_health=50, level=1)
-        self.mobs = [self.mob1, self.mob2, self.mob3, self.mob4]
+        self.mob1 = Mob(name="Goblin", damage=10, maximum_health=50, level=1)
+        self.mob2 = Mob(name="Orc", damage=15, maximum_health=70, level=1)
+        self.mob3 = Mob(name="Ogre", damage=15, maximum_health=150, level=1)
+        self.mob4 = Mob(name="slime", damage=5, maximum_health=50, level=1)
+        self.mobs: list[Mob] = [self.mob1, self.mob2, self.mob3, self.mob4]
 
     def start(self):
         # Determine the number of enemies based on probabilities
@@ -50,10 +50,10 @@ class Game:
                 if option.isdigit():
                     option = int(option)
                     if 1 <= option <= len(current_mobs):
-                        selected_mob = current_mobs[option - 1]
+                        selected_mob: Mob = current_mobs[option - 1]
+                        selected_mob.is_target_mob = True
                         # Assuming character is defined elsewhere
-                        character.attack(selected_mob)
-                        print(character.attack(selected_mob))
+                        print(character.attack(current_mobs))
                         print(selected_mob.get_info())
                         break
                     else:

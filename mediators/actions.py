@@ -1,11 +1,12 @@
 from abc import ABC, abstractmethod
-
-from datum.entity import Entity, Player, Mob
+from datum.inventory import Inventory
+from datum.items import short_sword, MetadataType
 
 
 class Actions(ABC):
+    @classmethod
     @abstractmethod
-    def execute(self):
+    def execute(cls, player, enemies: list['Mob']):
         ...
 
 
@@ -14,21 +15,30 @@ class Attack(Actions):
     Handles Attacks With Respect To Item/s Equipped
     """
 
-    def __init__(self, player: Player, enemies: list[Mob]):
+    def __init__(self, player: 'Player', enemies: list['Mob']):
         self.player = player
         self.enemies = enemies
 
     @staticmethod
-    def calculate_player_damage(player):
-        base_damage = player.damage
-        # TODO: Add damage calculation for single target and aoe
+    def calculate_player_damage(player) -> float:
+        player_damage = player.damage
+        equipped_weapon = short_sword
 
-    def execute(self):
-        player = self.player
+        for metadatum in equipped_weapon.metadata:
+            if metadatum.item_type == MetadataType.BaseDamage.value:
+                player_damage += metadatum.data
+            if metadatum.item_type == MetadataType.DamageMultiplier.value:
+                player_damage *= metadatum.data
+
+        return player_damage
+
+    @classmethod
+    def execute(cls, player, enemies: list['Mob']):
         # TODO: What is the distinction between single target attack and AOE
         # TODO: How do you target a mob?
-        target_mob, = [mob for mob in self.enemies if mob.is_target_mob is True]
-        target_mob.current_health -= self.calculate_player_damage(player)
+        selected_mob = [mob for mob in enemies if mob.is_target_mob is True]
+        target_mob = selected_mob[0]
+        target_mob.current_health -= cls.calculate_player_damage(player)
         if target_mob.current_health <= 0:
             target_mob.current_health = 0
         if target_mob.current_health <= 0:

@@ -14,7 +14,6 @@ class MetadataType(Enum):  # TODO: Deliberate Whether To Use auto() or fill in m
     AOEDamage = auto()  # by default, this is the damage multiplier for every other enemy
     UltimateDamageMultiplier = auto()
     UltimateAOEDamageMultiplier = auto()
-    DamageDebuffToEnemy = auto()
 
 
 class ItemTypeMetadata(BaseModel):
@@ -43,7 +42,6 @@ short_sword = Item(id=1, name='Short Sword', price=10, metadata=[
     ItemTypeMetadata(item_type=MetadataType.BaseDamage, data=50),
     ItemTypeMetadata(item_type=MetadataType.DamageMultiplier, data=1.2),
     ItemTypeMetadata(item_type=MetadataType.UltimateDamageMultiplier, data=3),  # not 300% but 3
-    ItemTypeMetadata(item_type=MetadataType.DamageDebuffToEnemy, data=0.1)  # should lower enemy health by 10%
 ])
 
 long_sword = Item(id=2, name='Long Sword', price=50, metadata=[
