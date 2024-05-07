@@ -38,13 +38,13 @@ class Item(BaseModel):
 #########
 
 
-short_sword = Item(id=1, name='Short Sword', price=10, metadata=[
+short_sword = Item(id=1, name='Short Sword', price=250, metadata=[
     ItemTypeMetadata(item_type=MetadataType.BaseDamage, data=50),
     ItemTypeMetadata(item_type=MetadataType.DamageMultiplier, data=1.2),
     ItemTypeMetadata(item_type=MetadataType.UltimateDamageMultiplier, data=3),  # not 300% but 3
 ])
 
-long_sword = Item(id=2, name='Long Sword', price=50, metadata=[
+long_sword = Item(id=2, name='Long Sword', price=250, metadata=[
     ItemTypeMetadata(item_type=MetadataType.BaseDamage, data=75),
     ItemTypeMetadata(item_type=MetadataType.DamageMultiplier, data=1),
     ItemTypeMetadata(item_type=MetadataType.AOEDamage, data=0.5),
@@ -56,23 +56,23 @@ long_sword = Item(id=2, name='Long Sword', price=50, metadata=[
 #########
 
 
-small_health_potion = Item(id=3, name='Small Health Potion', price=5, metadata=[
+small_health_potion = Item(id=3, name='Small Health Potion', price=10, metadata=[
     ItemTypeMetadata(item_type=MetadataType.HealthRestoration, data=0.25)
 ])
 
-medium_health_potion = Item(id=4, name='Medium Health Potion', price=10, metadata=[
+medium_health_potion = Item(id=4, name='Medium Health Potion', price=25, metadata=[
     ItemTypeMetadata(item_type=MetadataType.HealthRestoration, data=0.5)
 ])
 
-large_health_potion = Item(id=5, name='Large Health Potion', price=20, metadata=[
+large_health_potion = Item(id=5, name='Large Health Potion', price=50, metadata=[
     ItemTypeMetadata(item_type=MetadataType.HealthRestoration, data=1)
 ])
 
-ult_potion = Item(id=6, name='Ultimate Potion', price=50, metadata=[
+ult_potion = Item(id=6, name='Ultimate Potion', price=75, metadata=[
     ItemTypeMetadata(item_type=MetadataType.UltimateEnabler, data=1)  # 1 means true
 ])
 
-double_damage_potion = Item(id=7, name='Damage Double Potion', price=15, metadata=[
+double_damage_potion = Item(id=7, name='Damage Double Potion', price=25, metadata=[
     ItemTypeMetadata(item_type=MetadataType.DamageMultiplier, data=2)
 ])
 
