@@ -1,35 +1,54 @@
 import json
 from abc import ABC
-from json import JSONDecodeError
 
 from pydantic import BaseModel
 
-from database.abc import CRUD
+from database.abc import CRUD, T
 from datum.inventory import Inventory
+from datum.items import Item
 from generics.file_ops import return_json_data
 
 
-class Create(CRUD, ABC):
-    pass
+class Create(CRUD[BaseModel], ABC):
+
+    @staticmethod
+    def add_model_to_database_file(data: BaseModel, file_name: str):
+        database_data = return_json_data(f'data/{file_name}.json')
+        data_dumped = data.model_dump()
+
+        if file_name not in list(database_data.keys()):
+            database_data.update({file_name: [data_dumped]})
+        else:
+            collection = database_data[file_name]
+            if (data.id in (model['id'] for model in collection)) is True:
+                raise ValueError('ID Already Exists. Cannot Add Existing Model.')
+            else:
+                collection.append(data_dumped)
+                database_data.update({file_name: collection})
+
+        with open(f'data/{file_name}.json', 'w') as f:
+            json.dump(database_data, f)
 
 
 class AddInventory(Create):
-
     @classmethod
-    def execute(cls, data: BaseModel):
+    def execute(cls, data: T):
         """ Adds Inventory To Database. Only Adds. Raises Error If Inventory Already Exists
         Args:
             data:`Inventory`
         """
         if isinstance(data, Inventory) is False:
-            raise ValueError(f"Argument {type(data)} is not of type {type(BaseModel)}")
+            raise ValueError(f"Argument {type(data)} is not an instance of {type(BaseModel)}.")
+        cls.add_model_to_database_file(data, 'inventories')
 
-        file_path = 'data/inventories.json'
-        database_data = return_json_data(file_path)
 
-        if str(data.id) in list(database_data.keys()) is True:
-            raise ValueError('Inventory ID Already Exists. Cannot Add Existing Model.')
-        database_data.update({data.id: data.model_dump()})
-
-        with open(file_path, 'w') as f:
-            json.dump(database_data, f)
+class AddItem(Create):
+    @classmethod
+    def execute(cls, data: T):
+        """ Adds Inventory To Database. Only Adds. Raises Error If Inventory Already Exists
+        Args:
+            data:`Item`
+        """
+        if isinstance(data, Item) is False:
+            raise ValueError(f"Argument {type(data)} is not an instance of {type(BaseModel)}.")
+        cls.add_model_to_database_file(data, 'items')

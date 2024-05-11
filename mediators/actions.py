@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
+
+from database.read import GetItem
 from datum.inventory import Inventory
-from datum.items import short_sword, MetadataType
+from datum.items import short_sword, MetadataType, perform_player_calculation_with_metadata
 
 
 class Actions(ABC):
@@ -21,16 +23,13 @@ class Attack(Actions):
 
     @staticmethod
     def calculate_player_damage(player) -> float:
-        player_damage = player.damage
-        equipped_weapon = short_sword
+        for equipped_item_id in player.equipped_items:
+            equipped_item = GetItem.execute(equipped_item_id)
 
-        for metadatum in equipped_weapon.metadata:
-            if metadatum.item_type == MetadataType.BaseDamage.value:
-                player_damage += metadatum.data
-            if metadatum.item_type == MetadataType.DamageMultiplier.value:
-                player_damage *= metadatum.data
+            for metadata in equipped_item.metadata:
+                perform_player_calculation_with_metadata(metadata, player)
 
-        return player_damage
+        return player.damage
 
     @classmethod
     def execute(cls, player, enemies: list['Mob']):

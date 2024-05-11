@@ -1,15 +1,16 @@
 import random
-from datum.entity import Entity
+from datum.entity import Entity, Mob
 
 
 class Game:
     def __init__(self):
         # Define the mobs
-        self.mob1 = Entity(name="Goblin", damage=10, maximum_health=50, level=1)
-        self.mob2 = Entity(name="Orc", damage=15, maximum_health=70, level=1)
-        self.mob3 = Entity(name="Ogre", damage=15, maximum_health=150, level=1)
-        self.mob4 = Entity(name="slime", damage=5, maximum_health=50, level=1)
-        self.mobs = [self.mob1, self.mob2, self.mob3, self.mob4]
+        self.mobs: list[Mob] = [
+            Mob(name="Goblin", damage=10, maximum_health=50, level=1),
+            Mob(name="Orc", damage=15, maximum_health=70, level=1),
+            Mob(name="Ogre", damage=15, maximum_health=150, level=1),
+            Mob(name="slime", damage=5, maximum_health=50, level=1)
+        ]
 
     def start(self):
         # Determine the number of enemies based on probabilities
@@ -60,14 +61,3 @@ class Game:
                         print("Invalid option.")
                 else:
                     print("Invalid input. Please enter a number.")
-
-
-player_name = input("Enter Character Name: ")
-while True:
-    character = player_name
-    if character.isalpha():
-        character = Entity(name=f"{character}", damage=10, maximum_health=100, level=1)
-        game = Game()
-        game.start()
-    else:
-        print("Invalid")

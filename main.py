@@ -1,15 +1,17 @@
 import random
-from datum.entity import Mob, Entity
+from datum.entity import Mob, Entity, Player
+from datum.items import small_health_potion, short_sword
 
 
 class Game:
     def __init__(self):
         # Define the mobs
-        self.mob1 = Mob(name="Goblin", damage=10, maximum_health=50, level=1)
-        self.mob2 = Mob(name="Orc", damage=15, maximum_health=70, level=1)
-        self.mob3 = Mob(name="Ogre", damage=15, maximum_health=150, level=1)
-        self.mob4 = Mob(name="slime", damage=5, maximum_health=50, level=1)
-        self.mobs: list[Mob] = [self.mob1, self.mob2, self.mob3, self.mob4]
+        self.mobs: list[Mob] = [
+            Mob(name="Goblin", damage=10, maximum_health=50, level=1),
+            Mob(name="Orc", damage=15, maximum_health=70, level=1),
+            Mob(name="Ogre", damage=15, maximum_health=150, level=1),
+            Mob(name="slime", damage=5, maximum_health=50, level=1)
+        ]
 
     def start(self):
         # Determine the number of enemies based on probabilities
@@ -55,7 +57,7 @@ class Game:
                         # Assuming character is defined elsewhere
                         print(character.attack(current_mobs))
                         print(selected_mob.get_info())
-                        break
+                        selected_mob.is_target_mob = False
                     else:
                         print("Invalid option.")
                 else:
@@ -64,9 +66,14 @@ class Game:
 
 player_name = input("Enter Character Name: ")
 while True:
-    character = player_name
-    if character.isalpha():
-        character = Entity(name=f"{character}", damage=10, maximum_health=100, level=1)
+    if player_name.isalpha():
+        character = Player(
+            name=player_name,
+            level=1,
+            inventory_id=1,
+            gold_balance=300,
+            equipped_items=[short_sword.id]
+        )
         game = Game()
         game.start()
     else:

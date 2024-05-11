@@ -1,9 +1,7 @@
-import json
-from json import JSONDecodeError
-
-from database.create import Create, AddInventory
+from database.create import AddInventory, AddItem
+from database.read import GetItem
 from datum.inventory import InventoryItemProperties, Inventory
-from datum.items import large_health_potion, small_health_potion
+from datum.items import large_health_potion, small_health_potion, short_sword
 
 
 def test_add_inventory():
@@ -12,3 +10,13 @@ def test_add_inventory():
         InventoryItemProperties(id=large_health_potion.id, amount=1)
     ])
     AddInventory.execute(inventory)
+
+
+def test_add_item():
+    item = short_sword
+    AddItem.execute(item)
+
+
+def test_get_item():
+    item = GetItem.execute(3)
+    print(item)

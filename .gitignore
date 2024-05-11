@@ -1,3 +1,4 @@
 .idea
 iniw
 *__pycache__
+!/tests/test_basics.py

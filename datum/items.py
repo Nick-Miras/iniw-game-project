@@ -1,19 +1,20 @@
 from pydantic import Field, BaseModel
-from pydantic.dataclasses import dataclass
-from enum import Enum, auto
+from enum import Enum
 
 from typing_extensions import Annotated
 
+from custom_types import ID
+
 
 class MetadataType(Enum):  # TODO: Deliberate Whether To Use auto() or fill in manually
-    HealthRestoration = auto()
-    HealthMultiplier = auto()
-    UltimateEnabler = auto()
-    BaseDamage = auto()
-    DamageMultiplier = auto()  # TODO: Possibly an ATTACK multiplier, not a DMG multiplier. Ask INIW
-    AOEDamage = auto()  # by default, this is the damage multiplier for every other enemy
-    UltimateDamageMultiplier = auto()
-    UltimateAOEDamageMultiplier = auto()
+    HealthRestoration = 'health restoration'
+    HealthMultiplier = 'health multiplier'
+    UltimateEnabler = 'ultimate enabler'
+    BaseDamage = 'base damage'
+    DamageMultiplier = 'damage multiplier'  # TODO: Possibly an ATTACK multiplier, not a DMG multiplier. Ask INIW
+    AOEDamage = 'aoe damage'  # by default, this is the damage multiplier for every other enemy
+    UltimateDamageMultiplier = 'ultimate damage multiplier'
+    UltimateAOEDamageMultiplier = 'ultimate aoe damage multiplier'
 
 
 class ItemTypeMetadata(BaseModel):
@@ -25,13 +26,21 @@ class ItemTypeMetadata(BaseModel):
 
 
 class Item(BaseModel):
-    id: int
+    id: ID
     name: str
-    description: Annotated[str, Field(default=None)]
+    description: Annotated[str, Field(default='')]
     price: int
     consumable: Annotated[bool, Field(default=False)]
     metadata: list[ItemTypeMetadata]
 
+
+def perform_player_calculation_with_metadata(metadata: ItemTypeMetadata, player: 'Player'):
+    match metadata.item_type:
+        case MetadataType.BaseDamage.value:
+            player.damage += metadata.data
+        case MetadataType.DamageMultiplier.value:
+            player.damage *= metadata.data
+    return player
 
 #########
 # Weapons
@@ -44,11 +53,8 @@ short_sword = Item(id=1, name='Short Sword', price=251, metadata=[
     ItemTypeMetadata(item_type=MetadataType.UltimateDamageMultiplier, data=3),  # not 300% but 3
 ])
 
-long_sword = Item(id=2, name='Long Sword', price=250, metadata=[
-    ItemTypeMetadata(item_type=MetadataType.BaseDamage, data=75),
-    ItemTypeMetadata(item_type=MetadataType.DamageMultiplier, data=1),
-    ItemTypeMetadata(item_type=MetadataType.AOEDamage, data=0.5),
-    ItemTypeMetadata(item_type=MetadataType.UltimateAOEDamageMultiplier, data=2)
+long_sword = Item(id=2, name='Stick', price=0, metadata=[
+    ItemTypeMetadata(item_type=MetadataType.BaseDamage, data=10)
 ])
 
 #########

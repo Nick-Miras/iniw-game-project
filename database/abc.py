@@ -1,10 +1,12 @@
 from abc import ABC, abstractmethod
 
-from pydantic import BaseModel
+from typing import Any, TypeVar, Generic
+
+T = TypeVar('T')
 
 
-class CRUD(ABC):
+class CRUD(ABC, Generic[T]):
     @classmethod
     @abstractmethod
-    def execute(cls, data: BaseModel):
+    def execute(cls, data: T):
         ...
