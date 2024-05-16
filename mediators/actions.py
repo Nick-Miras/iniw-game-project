@@ -33,12 +33,15 @@ class Attack(Actions):
 
         return player.damage
 
+    @staticmethod
+    def get_selected_mob(enemies: list['Mob']):
+        for mob in enemies:
+            if mob.is_target_mob is True:
+                return mob
+
     @classmethod
     def execute(cls, player, enemies: list['Mob']):
-        # TODO: What is the distinction between single target attack and AOE
-        # TODO: How do you target a mob?
-        selected_mob = [mob for mob in enemies if mob.is_target_mob is True]
-        target_mob = selected_mob[0]
+        target_mob = cls.get_selected_mob(enemies)
         target_mob.current_health -= cls.calculate_player_damage(player)
         if target_mob.current_health <= 0:
             target_mob.current_health = 0

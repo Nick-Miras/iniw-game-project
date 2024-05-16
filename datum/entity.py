@@ -46,6 +46,7 @@ class Player(Entity):
     damage: Annotated[int, Field(default=0, init=False)]
     experience: Annotated[float, Field(default=0, init=False)]
     maximum_health: Annotated[int, Field(default=0, init=False)]
+    ultimate_points: Annotated[int, Field(default=0, init=False)]  # TODO: Review
 
     @field_validator('equipped_items')
     @classmethod
