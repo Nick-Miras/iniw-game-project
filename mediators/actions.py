@@ -1,8 +1,7 @@
 from abc import ABC, abstractmethod
 
 from database.read import GetItem
-from datum.inventory import Inventory
-from datum.items import short_sword, MetadataType, perform_player_calculation_with_metadata
+from datum.items import perform_player_calculation_with_metadata
 
 
 class Actions(ABC):
@@ -25,17 +24,12 @@ class Attack(Actions):
     Handles Attacks With Respect To Item/s Equipped
     """
 
-    def __init__(self, player: 'Player', enemies: list['Mob']):
-        self.player = player
-        self.enemies = enemies
-
     @staticmethod
     def calculate_player_damage(player) -> float:
-        for equipped_item_id in player.equipped_items:
-            equipped_item = GetItem.execute(equipped_item_id)
+        equipped_item = GetItem.execute(player.equipped_item)
 
-            for metadata in equipped_item.metadata:
-                perform_player_calculation_with_metadata(metadata, player)
+        for metadata in equipped_item.metadata:
+            perform_player_calculation_with_metadata(metadata, player)
 
         return player.damage
 

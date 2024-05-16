@@ -41,7 +41,7 @@ class Mob(Entity):
 
 class Player(Entity):
     inventory_id: ID
-    equipped_items: list[ID]
+    equipped_item: ID
     gold_balance: int
     damage: Annotated[int, Field(default=0, init=False)]
     experience: Annotated[float, Field(default=0, init=False)]

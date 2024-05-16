@@ -6,12 +6,15 @@ from typing_extensions import Annotated
 from custom_types import ID
 
 
-class MetadataType(Enum):  # TODO: Deliberate Whether To Use auto() or fill in manually
+class MetadataType(Enum):
+    # potions
     HealthRestoration = 'health restoration'
     HealthMultiplier = 'health multiplier'
     UltimateEnabler = 'ultimate enabler'
+
+    # weapons
     BaseDamage = 'base damage'
-    DamageMultiplier = 'damage multiplier'  # TODO: Possibly an ATTACK multiplier, not a DMG multiplier. Ask INIW
+    DamageMultiplier = 'damage multiplier'
     UltimateDamageMultiplier = 'ultimate damage multiplier'
 
 
@@ -38,6 +41,8 @@ def perform_player_calculation_with_metadata(metadata: ItemTypeMetadata, player:
         case MetadataType.BaseDamage.value:
             player.damage += metadata.data
         case MetadataType.DamageMultiplier.value:
+            player.damage *= metadata.data
+        case MetadataType.UltimateDamageMultiplier.value:
             player.damage *= metadata.data
     return player
 
