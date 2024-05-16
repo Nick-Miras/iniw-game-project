@@ -28,7 +28,8 @@ class Shop:
 
         player_inventory: Inventory = GetInventory.execute(self.player.inventory_id)
         if player_inventory.does_item_exist(item_id) is True:
-            player_inventory.update_item_with_amount(item_id, amount)
+            current_amount = player_inventory.get_item_amount(item_id)
+            player_inventory.update_item_with_amount(item_id, current_amount + amount)
         else:
             player_inventory.add_item(item_id, amount)
         self.player.gold_balance -= GetItem.execute(item_id).price

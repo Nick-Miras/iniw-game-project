@@ -1,5 +1,6 @@
 from custom_types import ID
-from database.read import GetItem
+from database.read import GetItem, GetInventory
+from database.update import UpdateInventory
 from generics.entity import (
     calculate_exp_gained_from_enemy_level,
     non_recursively_calculate_total_exp_at_level,
@@ -46,6 +47,13 @@ class Player(Entity):
     experience: Annotated[float, Field(default=0, init=False)]
     maximum_health: Annotated[int, Field(default=0, init=False)]
 
+    @field_validator('equipped_items')
+    @classmethod
+    def items_must_exist(cls, v: list[ID]):
+        for item in v:
+            GetItem.execute(item)  # raises ValueError if item does not exist
+        return v
+
     def model_post_init(self, __context: Any) -> None:
         self.damage = calculate_damage_at_level(self.level)
         self.current_health = self.maximum_health = calculate_max_health_at_level(self.level)
@@ -69,9 +77,11 @@ class Player(Entity):
         self.damage = calculate_damage_at_level(self.level)
         self.current_health = self.maximum_health = calculate_max_health_at_level(self.level)
 
-    @field_validator('equipped_items')
-    @classmethod
-    def items_must_exist(cls, v: list[ID]):
-        for item in v:
-            GetItem.execute(item)  # raises ValueError if item does not exist
-        return v
+    def sell(self, item_id: ID, amount: int):
+        inventory = GetInventory.execute(self.inventory_id)
+        current_amount = inventory.get_item_properties(item_id).amount
+        if amount > current_amount:
+            raise ValueError("Item Amount To Sell Exceeds Inventory's Current Amount")
+
+        inventory.update_item_with_amount(current_amount - amount)
+        UpdateInventory.execute(inventory)
