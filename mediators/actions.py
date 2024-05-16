@@ -12,6 +12,14 @@ class Actions(ABC):
         ...
 
 
+class ShowInfo(Actions):
+    pass
+
+
+class UseItem(Actions):
+    pass
+
+
 class Attack(Actions):
     """
     Handles Attacks With Respect To Item/s Equipped

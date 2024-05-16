@@ -2,15 +2,16 @@ from abc import ABC, abstractmethod
 
 from pydantic import BaseModel
 
+from custom_types import ID
 from database.abc import CRUD, T
 from datum.inventory import Inventory
 from datum.items import Item
 from generics.file_ops import return_json_data
 
 
-class Read(CRUD[int], ABC):
+class Read(CRUD[ID], ABC):
     @staticmethod
-    def get_from_collection_using(id_: int, collection: list[dict]):
+    def get_from_collection_using(id_: ID, collection: list[dict]):
         return [model for model in collection if model['id'] == id_][0]
 
 

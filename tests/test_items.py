@@ -65,5 +65,5 @@ def test_shop():
         equipped_items=[small_health_potion.id]
     )
 
-    with pytest.raises(ValueError):  # if raises ValueError
+    with pytest.raises(ValueError):
         shop.buy(1, 1)

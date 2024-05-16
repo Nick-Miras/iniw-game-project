@@ -12,9 +12,7 @@ class MetadataType(Enum):  # TODO: Deliberate Whether To Use auto() or fill in m
     UltimateEnabler = 'ultimate enabler'
     BaseDamage = 'base damage'
     DamageMultiplier = 'damage multiplier'  # TODO: Possibly an ATTACK multiplier, not a DMG multiplier. Ask INIW
-    AOEDamage = 'aoe damage'  # by default, this is the damage multiplier for every other enemy
     UltimateDamageMultiplier = 'ultimate damage multiplier'
-    UltimateAOEDamageMultiplier = 'ultimate aoe damage multiplier'
 
 
 class ItemTypeMetadata(BaseModel):
@@ -31,6 +29,7 @@ class Item(BaseModel):
     description: Annotated[str, Field(default='')]
     price: int
     consumable: Annotated[bool, Field(default=False)]
+    reusable: Annotated[bool, Field(default=False)]
     metadata: list[ItemTypeMetadata]
 
 
@@ -47,13 +46,13 @@ def perform_player_calculation_with_metadata(metadata: ItemTypeMetadata, player:
 #########
 
 
-short_sword = Item(id=1, name='Short Sword', price=251, metadata=[
+short_sword = Item(id=1, name='Short Sword', price=100, reusable=True, metadata=[
     ItemTypeMetadata(item_type=MetadataType.BaseDamage, data=50),
     ItemTypeMetadata(item_type=MetadataType.DamageMultiplier, data=1.2),
     ItemTypeMetadata(item_type=MetadataType.UltimateDamageMultiplier, data=3),  # not 300% but 3
 ])
 
-long_sword = Item(id=2, name='Stick', price=0, metadata=[
+stick = Item(id=2, name='Stick', price=0, reusable=True, metadata=[
     ItemTypeMetadata(item_type=MetadataType.BaseDamage, data=10)
 ])
 
