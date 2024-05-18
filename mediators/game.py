@@ -8,18 +8,25 @@ from mediators.shop import Shop, shop_inventory_1
 
 
 class Game:
-    def __init__(self, new_game):
-        try:
-            old_player = database.get_player(1)
-        except ValueError:  # if player doesn't exist
-            print("Player Does Not Exist Yet... Creating New Player.")
+    def __init__(self, new_game:bool):
+        if new_game:
+            try:
+                old_player = database.get_player(1)
+                database.delete_player(old_player.id)
+                database.delete_player(old_player.inventory_id)
+            except ValueError:  # if player doesn't exist
+                print("Player Does Not Exist Yet... Creating New Player.")
+            else:
+                database.delete_player(old_player.id)
+                database.delete_inventory(old_player.inventory_id)
+
+            self.player = create_new_player()
+            database.create_player(self.player)
         else:
-            database.delete_player(old_player.id)
-            database.delete_inventory(old_player.inventory_id)
-            if new_game is False:
-                self.player = old_player
-        finally:
-            if new_game is True:
+            try:
+                self.player = database.get_player(1)
+            except ValueError:
+                print("No existing player found. Starting a new game.")
                 self.player = create_new_player()
                 database.create_player(self.player)
 
@@ -83,9 +90,9 @@ class Game:
 
     def game_actions(self):
         # ui in game actions
-        print("1. Attack")
-        print("2. Inventory")
-        print("3. Show Player info")
+        print("1. Attack".center(160))
+        print("2. Inventory".center(160))
+        print("3. Show Player info".center(160))
         while True:
             option = input("Enter Choice: ")
             if option == '1':
@@ -99,6 +106,7 @@ class Game:
                 print("Invalid Choice".center(160))
 
     def game_attack_actions(self):
+        self.player.current_info()
         print("1. Basic Attack".center(160))
         print("2. Skill Attack".center(160))
         print("3. Ultimate Attack".center(160))
@@ -117,20 +125,21 @@ def initialize_player_and_inventory(player, inventory):
     database.create_inventory(inventory)
 
 def create_new_player():
-    player_name = input("Player Name:")
-    if player_name.isalpha():
-        return Player(
-            id=1,
-            name=player_name,
-            level=1,
-            current_health=100,
-            damage=10,
-            inventory_id=1,
-            equipped_item=stick.id,
-            gold_balance=300
-        )
-    else:
-        print("Player Name Must Be Alphabetical".center(160))
+    while True:
+        player_name = input("Player Name:")
+        if player_name.isalpha():
+            return Player(
+                id=1,
+                name=player_name,
+                level=1,
+                current_health=100,
+                damage=10,
+                inventory_id=1,
+                equipped_item=stick.id,
+                gold_balance=300
+            )
+        else:
+            print("Player Name Must Be Alphabetical".center(160))
 
 
 def menu():

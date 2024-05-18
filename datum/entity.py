@@ -63,20 +63,23 @@ class Player(Entity):
         return v
 
     def get_info(self):
+        info = (f"Player Info:\n"
+        f"Player Name:{self.name}\n"
+        f"Current Level: {self.level}\n"
+        f"Current Health: {self.current_health}/{self.maximum_health}\n"
+        f"Weapon Equiped: {self.equipped_item}\n"
+        f"Gold Ballance: {self.gold_balance}\n")
 
-        return dedent(f"""\
-        Player Name:{self.name}
-        Current Level: {self.level}
-        Current Health: {self.current_health}/{self.maximum_health}
-        Weapon Equiped: {self.equipped_item}
-        Gold Ballance: {self.gold_balance}
-        Skill points{self.skill_points}/5
-        Ult Points{self.ultimate_points}/3""")
+        print(info)
+        return info
     def current_info(self):
-        return dedent(f"""\
-        Current Health: {self.current_health}/{self.maximum_health}
-        Skill points{self.skill_points}/5
-        Ult Points{self.ultimate_points}/3""")
+        c_info = (f"Current Player Info:\n"
+        f"Current Health: {self.current_health}/{self.maximum_health}\n"
+        f"Skill points: {self.skill_points}/5\n"
+        f"Ult Points: {self.ultimate_points}/3\n")
+
+        print(c_info)
+        return c_info
     def model_post_init(self, __context: Any) -> None:
         self.damage = calculate_damage_at_level(self.level)
         self.current_health = self.maximum_health = calculate_max_health_at_level(self.level)
