@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 from custom_types import ID
-from database import GetItem
+import database
 
 
 class InventoryItemProperties(BaseModel):
@@ -47,5 +47,6 @@ class Inventory(BaseModel):
 
     def display_information_of_items(self):
         for item in self.items:
-            item = GetItem.execute(item.id)
+            item = database.GetItem.execute(item.id)
             item.get_info()
+        print("========================================================================")

@@ -62,6 +62,7 @@ class Game:
                 else:
                     print("Invalid input. Please enter a number.")
 
+
 def menu():
     #ui for menu
     print("-=Iniw Game=-".center(160))
@@ -75,7 +76,9 @@ def menu():
             pass
         else:
             print("Invalid Choice".center(160))
-def play ():
+
+
+def play():
     #ui for what the player want to choose after every battle
     print("1. Dungeon".center(160))
     print("2. Shop".center(160))
@@ -87,6 +90,7 @@ def play ():
             pass
         else:
             print("Invalid Choice".center(160))
+
 
 def game_actions():
     #ui in game actions
@@ -104,6 +108,7 @@ def game_actions():
         else:
             print("Invalid Choice".center(160))
 
+
 def game_attack_actions():
     print("1. Basic Attack".center(160))
     print("2. Skill Attack".center(160))
@@ -116,6 +121,3 @@ def game_attack_actions():
             pass
         elif option == '3':
             pass
-
-
-

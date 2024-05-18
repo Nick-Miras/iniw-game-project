@@ -27,7 +27,7 @@ def attack(player, enemies: list['Mob'], attack_type: AttackType):
     if target_mob.current_health <= 0:
         return f"{player.name} defeated {target_mob.name}!"
     else:
-        return f"{player.name} attacked {target_mob.name}. {target_mob.name}'s health: {target_mob.current_health}"
+        return f"{player.name} attacked {target_mob.name}. {target_mob.name}'s health: {round(target_mob.current_health, 2)}"
 
 
 def perform_player_calculation_with_metadata(metadata: ItemTypeMetadata, player_damage: float, attack_type: AttackType) -> float:
