@@ -1,15 +1,17 @@
 import json
 from abc import ABC
+from typing import Generic
 
 from pydantic import BaseModel
 
 from database.abc import CRUD, T
+from datum.entity import Player
 from datum.inventory import Inventory
 from datum.items import Item
 from generics.file_ops import return_json_data
 
 
-class Create(CRUD[BaseModel], ABC):
+class Create(CRUD, ABC, Generic[T]):
 
     @staticmethod
     def add_model_to_database_file(data: BaseModel, file_name: str):
@@ -30,7 +32,7 @@ class Create(CRUD[BaseModel], ABC):
             json.dump(database_data, f)
 
 
-class AddInventory(Create):
+class AddInventory(Create[Inventory]):
     @classmethod
     def execute(cls, data: T):
         """ Adds Inventory To Database. Only Adds. Raises Error If Inventory Already Exists
@@ -42,7 +44,7 @@ class AddInventory(Create):
         cls.add_model_to_database_file(data, 'inventories')
 
 
-class AddItem(Create):
+class AddItem(Create[Item]):
     @classmethod
     def execute(cls, data: T):
         """ Adds Inventory To Database. Only Adds. Raises Error If Inventory Already Exists
@@ -52,3 +54,11 @@ class AddItem(Create):
         if isinstance(data, Item) is False:
             raise ValueError(f"Argument {type(data)} is not an instance of {type(BaseModel)}.")
         cls.add_model_to_database_file(data, 'items')
+
+
+class AddPlayer(Create[Player]):
+    @classmethod
+    def execute(cls, data: T):
+        if isinstance(data, Player) is False:
+            raise ValueError(f"Argument {type(data)} is not an instance of {type(BaseModel)}.")
+        cls.add_model_to_database_file(data, 'players')

@@ -26,14 +26,15 @@ class Item(BaseModel):
     metadata: list[ItemTypeMetadata]
 
     def get_info(self):
-        info = dedent(f"""
+        stats = '\n'.join(f"{metadatum.item_type.title()}: {metadatum.data}" for metadatum in self.metadata)
+        info = dedent(f"""\
         ========================================================================
         Item Name: {self.name}
         Item Description: {self.description}
-        Item Stats: 
-        ========================================================================
-        """)
+        Item Stats:""")
         print(info)
+        print(stats)
+
 
 #########
 # Weapons
