@@ -1,5 +1,6 @@
 from datum.enumerations import AttackType
-from datum.items import perform_player_calculation_with_metadata, short_sword
+from datum.items import short_sword
+from mediators.actions.attack import perform_player_calculation_with_metadata
 
 
 def test_perform_player_calculation_with_metadata():

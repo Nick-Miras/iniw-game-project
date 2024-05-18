@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 from custom_types import ID
-from datum.items import Item
+from database import GetItem
 
 
 class InventoryItemProperties(BaseModel):
@@ -44,3 +44,8 @@ class Inventory(BaseModel):
             if item_properties.id == item_id:
                 return item_properties
         raise ValueError('Item is not found in inventory!')
+
+    def display_information_of_items(self):
+        for item in self.items:
+            item = GetItem.execute(item.id)
+            item.get_info()

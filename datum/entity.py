@@ -9,7 +9,7 @@ from generics.entity import (
     calculate_max_health_at_level,
     calculate_damage_at_level
 )
-from mediators.actions import attack
+from mediators.actions import attack, use_item
 
 from pydantic import Field, BaseModel, field_validator
 from typing import Any
@@ -49,6 +49,7 @@ class Player(Entity):
     maximum_health: Annotated[int, Field(default=0, init=False)]
     skill_points: Annotated[int, Field(default=0, init=False)]
     ultimate_points: Annotated[int, Field(default=0, init=False)]
+    items_applied: list[ID]
 
     @field_validator('equipped_items', check_fields=False)
     @classmethod
@@ -90,6 +91,10 @@ class Player(Entity):
             self.ultimate_points = 0
         if self.skill_points > 5:
             self.skill_points = 0
+
+    def use_item(self, item_id: ID):
+        use_item.use_item(self, item_id)
+        use_item.apply_used_items(self)
 
     def level_up(self, enemy_level: int):
         self.experience += calculate_exp_gained_from_enemy_level(enemy_level)

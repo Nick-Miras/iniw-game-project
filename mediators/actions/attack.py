@@ -1,6 +1,6 @@
-from datum.enumerations import AttackType
+from datum.enumerations import AttackType, MetadataType
 from database import GetItem
-from datum.items import perform_player_calculation_with_metadata
+from datum.items import ItemTypeMetadata
 
 
 def calculate_player_damage(player, attack_type: AttackType) -> float:
@@ -28,3 +28,16 @@ def attack(player, enemies: list['Mob'], attack_type: AttackType):
         return f"{player.name} defeated {target_mob.name}!"
     else:
         return f"{player.name} attacked {target_mob.name}. {target_mob.name}'s health: {target_mob.current_health}"
+
+
+def perform_player_calculation_with_metadata(metadata: ItemTypeMetadata, player_damage: float, attack_type: AttackType) -> float:
+    match metadata.item_type:
+        case MetadataType.BaseDamage.value:
+            player_damage += metadata.data
+        case MetadataType.DamageMultiplier.value:
+            if attack_type == AttackType.SkillAttack:
+                player_damage *= metadata.data
+        case MetadataType.UltimateDamageMultiplier.value:
+            if attack_type == AttackType.UltimateAttack:
+                player_damage *= metadata.data
+    return player_damage
