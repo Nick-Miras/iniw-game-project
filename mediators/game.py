@@ -14,19 +14,21 @@ class Game:
         except ValueError:  # if player doesn't exist
             print("Player Does Not Exist Yet... Creating New Player.")
         else:
+            database.delete_player(old_player.id)
+            database.delete_inventory(old_player.inventory_id)
+            if new_game is False:
+                self.player = old_player
+        finally:
             if new_game is True:
                 self.player = create_new_player()
-                database.delete_player(old_player.id)
-                database.delete_inventory(old_player.inventory_id)
-            else:  # use saved data
-                self.player = old_player
+                database.create_player(self.player)
 
         # Define the mobs
         self.mobs: list[Mob] = [
-            Mob(name="Goblin", damage=10, maximum_health=100, level=random.randint(1, 10)),
-            Mob(name="Orc", damage=15, maximum_health=170, level=random.randint(1, 10)),
-            Mob(name="Ogre", damage=15, maximum_health=250, level=random.randint(1, 10)),
-            Mob(name="slime", damage=5, maximum_health=70, level=random.randint(1, 10))
+            Mob(id=1,name="Goblin", damage=10, maximum_health=100, level=random.randint(1, 10)),
+            Mob(id=2,name="Orc", damage=15, maximum_health=170, level=random.randint(1, 10)),
+            Mob(id=3,name="Ogre", damage=15, maximum_health=250, level=random.randint(1, 10)),
+            Mob(id=4,name="slime", damage=5, maximum_health=70, level=random.randint(1, 10))
         ]
         self.play()
 
@@ -71,7 +73,7 @@ class Game:
         print("1. Dungeon".center(160))
         print("2. Shop".center(160))
         while True:
-            option = input("Enter Choice")
+            option = input("Enter Choice: ")
             if option == '1':
                 self.game_actions()
             elif option == '2':
