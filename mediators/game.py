@@ -6,10 +6,10 @@ class Game:
         # Define the mobs
         self.player = player
         self.mobs: list[Mob] = [
-            Mob(name="Goblin", damage=10, maximum_health=50, level=1),
-            Mob(name="Orc", damage=15, maximum_health=70, level=1),
-            Mob(name="Ogre", damage=15, maximum_health=150, level=1),
-            Mob(name="slime", damage=5, maximum_health=50, level=1)
+            Mob(name="Goblin", damage=10, maximum_health=100, level=random.randint(1, 10)),
+            Mob(name="Orc", damage=15, maximum_health=170, level=random.randint(1, 10)),
+            Mob(name="Ogre", damage=15, maximum_health=250, level=random.randint(1, 10)),
+            Mob(name="slime", damage=5, maximum_health=70, level=random.randint(1, 10))
         ]
 
     def start(self):
