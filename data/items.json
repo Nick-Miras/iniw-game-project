@@ -1,1 +1,48 @@
-{"items": [{"id": 3, "name": "Small Health Potion", "description": "", "price": 10, "consumable": false, "metadata": [{"item_type": "health restoration", "data": 0.25}]}, {"id": 1, "name": "Short Sword", "description": "", "price": 251, "consumable": false, "metadata": [{"item_type": "base damage", "data": 50}, {"item_type": "damage multiplier", "data": 1.2}, {"item_type": "ultimate damage multiplier", "data": 3}]}, {"id": 5, "name": "Large Health Potion", "description": "", "price": 50, "consumable": false, "reusable": false, "metadata": [{"item_type": "health restoration", "data": 1}]}]}
+{
+    "items": [
+        {
+            "id": 3,
+            "name": "Small Health Potion",
+            "description": "",
+            "price": 10,
+            "consumable": false,
+            "metadata": [{
+                "item_type": "health restoration",
+                "data": 0.25
+            }]
+        },
+        {
+            "id": 1,
+            "name": "Short Sword",
+            "description": "",
+            "price": 251,
+            "consumable": false,
+            "metadata": [
+                {
+                    "item_type": "base damage",
+                    "data": 50
+                },
+                {
+                    "item_type": "damage multiplier",
+                    "data": 1.2
+                },
+                {
+                    "item_type": "ultimate damage multiplier",
+                    "data": 3
+                }
+            ]
+        },
+        {
+            "id": 5,
+            "name": "Large Health Potion",
+            "description": "",
+            "price": 50,
+            "consumable": false,
+            "reusable": false,
+            "metadata": [{
+                "item_type": "health restoration",
+                "data": 1
+            }]
+        }
+    ]
+}
