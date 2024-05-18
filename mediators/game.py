@@ -7,14 +7,14 @@ from mediators.shop import Shop
 
 
 class Game:
-    def __init__(self, player, new_game):
+    def __init__(self, new_game):
         try:
             old_player = database.get_player(1)
         except ValueError:  # if player doesn't exist
-            self.player = player
+            print("Player Does Not Exist Yet... Creating New Player.")
         else:
             if new_game is True:
-                self.player = player
+                self.player = create_new_player()
                 database.delete_player(old_player.id)
                 database.delete_inventory(old_player.inventory_id)
             else:  # use saved data
@@ -82,6 +82,23 @@ def initialize_player_and_inventory(player, inventory):
     database.create_player(player)
     database.create_inventory(inventory)
 
+def create_new_player():
+    player_name = input("Player Name:")
+    if player_name.isalpha():
+        return Player(
+            id=1,
+            name=player_name,
+            level=1,
+            current_health=100,
+            damage=10,
+            inventory_id=1,
+            equipped_item=stick.id,
+            gold_balance=300
+        )
+    else:
+        print("Player Name Must Be Alphabetical".center(160))
+
+
 def menu():
     #ui for menu
     print("-=Iniw Game=-".center(160))
@@ -90,24 +107,9 @@ def menu():
     while True:
         option = input("Enter Choice:")
         if option == '1':
-            while True:
-                player_name = input("Player Name: ")
-                if player_name.isalpha():
-                    player =
-                    play(Player(
-                        id=1,
-                        name=player,
-                        level=1,
-                        current_health=100,
-                        damage=10,
-                        inventory_id=1,
-                        equipped_item=stick.id,
-                        gold_balance=300
-                    ))
-                else:
-                    print("Player Name Must Be Alphabetical".center(160))
+            game = Game(new_game=True)
         elif option == '2':
-            Game()
+            game = Game(new_game=False)
         else:
             print("Invalid Choice".center(160))
 
@@ -136,9 +138,9 @@ def game_actions():
         if option == '1':
             game_attack_actions()
         elif option == '2':
-            game_attack_actions()
+            pass
         elif option == '3':
-            game_attack_actions()
+            pass
         else:
             print("Invalid Choice".center(160))
 

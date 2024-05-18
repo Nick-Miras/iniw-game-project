@@ -64,7 +64,7 @@ class Player(Entity):
         self.current_health = self.maximum_health = calculate_max_health_at_level(self.level)
         self.experience = non_recursively_calculate_total_exp_at_level(self.level)
 
-    def attack(self, target_mobs: list[Mob],    attack_type: AttackType):
+    def attack(self, target_mobs: list[Mob], attack_type: AttackType):
         """
         Simulate an attack by this mob on another mob.
 
