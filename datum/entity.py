@@ -1,5 +1,6 @@
+from __future__ import annotations
 from custom_types import ID
-from database.read import GetItem, GetInventory
+import database
 from database.update import UpdateInventory
 from datum.enumerations import AttackType
 from generics.entity import (
@@ -12,16 +13,17 @@ from generics.entity import (
 from mediators.actions import attack, use_item
 
 from pydantic import Field, BaseModel, field_validator
-from typing import Any
+from typing import Any, TYPE_CHECKING
 from typing_extensions import Annotated
 
 
-
 class Entity(BaseModel):
+    id: ID
     name: str
     maximum_health: int
     level: int
     current_health: Annotated[int, Field(default=0, init=False)]
+    damage: Annotated[int, Field(default=0, init=False)]
 
     def model_post_init(self, __context: Any) -> None:
         self.current_health = self.maximum_health
@@ -44,18 +46,17 @@ class Player(Entity):
     inventory_id: ID
     equipped_item: ID
     gold_balance: int
-    damage: Annotated[int, Field(default=0, init=False)]
     experience: Annotated[float, Field(default=0, init=False)]
     maximum_health: Annotated[int, Field(default=0, init=False)]
     skill_points: Annotated[int, Field(default=0, init=False)]
     ultimate_points: Annotated[int, Field(default=0, init=False)]
-    items_applied: list[ID]
+    items_applied: Annotated[list[ID], Field(default=[], init=False)]
 
     @field_validator('equipped_items', check_fields=False)
     @classmethod
     def items_must_exist(cls, v: list[ID]):
         for item in v:
-            GetItem.execute(item)  # raises ValueError if item does not exist
+            database.get_item(item)  # raises ValueError if item does not exist
         return v
 
     def model_post_init(self, __context: Any) -> None:
@@ -63,15 +64,16 @@ class Player(Entity):
         self.current_health = self.maximum_health = calculate_max_health_at_level(self.level)
         self.experience = non_recursively_calculate_total_exp_at_level(self.level)
 
-    def attack(self, target_mobs: list['Mob'], attack_type: AttackType):
+    def attack(self, target_mobs: list[Mob],    attack_type: AttackType):
         """
         Simulate an attack by this mob on another mob.
 
         Args:
-            target_mobs (Mob): The target mob to attack.
+            target_mobs: the target mob to attack
+            attack_type: type of attack to execute
 
         Returns:
-            str: A message describing the attack outcome.
+            str: a message describing the attack outcome
         """
         match attack_type:
             case AttackType.BasicAttack:
@@ -103,7 +105,7 @@ class Player(Entity):
         self.current_health = self.maximum_health = calculate_max_health_at_level(self.level)
 
     def sell(self, item_id: ID, amount: int):
-        inventory = GetInventory.execute(self.inventory_id)
+        inventory = database.get_inventory(self.inventory_id)
         current_amount = inventory.get_item_properties(item_id).amount
         if amount > current_amount:
             raise ValueError("Item Amount To Sell Exceeds Inventory's Current Amount")

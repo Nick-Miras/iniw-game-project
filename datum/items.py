@@ -1,4 +1,5 @@
 from textwrap import dedent
+from typing import Optional
 
 from pydantic import Field, BaseModel
 
@@ -19,21 +20,22 @@ class ItemTypeMetadata(BaseModel):
 class Item(BaseModel):
     id: ID
     name: str
-    description: Annotated[str, Field(default='')]
+    description: Annotated[Optional[str], Field(default='')]
     price: int
-    consumable: Annotated[bool, Field(default=False)]
-    reusable: Annotated[bool, Field(default=False)]
+    consumable: Annotated[Optional[bool], Field(default=False)]
+    reusable: Annotated[Optional[bool], Field(default=False)]
     metadata: list[ItemTypeMetadata]
 
     def get_info(self):
-        info = dedent(f"""
+        stats = '\n'.join(f"{metadatum.item_type.title()}: {metadatum.data}" for metadatum in self.metadata)
+        info = dedent(f"""\
         ========================================================================
         Item Name: {self.name}
         Item Description: {self.description}
-        Item Stats: 
-        ========================================================================
-        """)
+        Item Stats:""")
         print(info)
+        print(stats)
+
 
 #########
 # Weapons

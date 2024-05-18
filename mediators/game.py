@@ -1,10 +1,25 @@
 import random
+
+import database
 from datum.entity import Mob
+from mediators.shop import Shop
+
 
 class Game:
-    def __init__(self, player):
+    def __init__(self, player, new_game):
+        try:
+            old_player = database.get_player(1)
+        except ValueError:  # if player doesn't exist
+            self.player = player
+        else:
+            if new_game is True:
+                self.player = player
+                database.delete_player(old_player.id)
+                database.delete_inventory(old_player.inventory_id)
+            else:  # use saved data
+                self.player = old_player
+
         # Define the mobs
-        self.player = player
         self.mobs: list[Mob] = [
             Mob(name="Goblin", damage=10, maximum_health=100, level=random.randint(1, 10)),
             Mob(name="Orc", damage=15, maximum_health=170, level=random.randint(1, 10)),
@@ -69,13 +84,16 @@ def menu():
     print("2.Continue".center(160))
     while True:
         option = input("Enter Choice:")
+        player =
         if option == '1':
             play()
         elif option == '2':
             pass
         else:
             print("Invalid Choice".center(160))
-def play ():
+
+
+def play(player):
     #ui for what the player want to choose after every battle
     print("1. Dungeon".center(160))
     print("2. Shop".center(160))
@@ -84,9 +102,10 @@ def play ():
         if option == '1':
             game_actions()
         elif option == '2':
-            pass
+            shop =
         else:
             print("Invalid Choice".center(160))
+
 
 def game_actions():
     #ui in game actions
@@ -104,18 +123,16 @@ def game_actions():
         else:
             print("Invalid Choice".center(160))
 
+
 def game_attack_actions():
     print("1. Basic Attack".center(160))
     print("2. Skill Attack".center(160))
     print("3. Ultimate Attack".center(160))
     while True:
-        option =  input("Enter Choice: ")
+        option = input("Enter Choice: ")
         if option == '1':
             pass
         elif option == '2':
             pass
         elif option == '3':
             pass
-
-
-

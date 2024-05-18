@@ -1,5 +1,6 @@
-from database.create import AddInventory
-from database.read import GetInventory, GetItem
+from database.create import AddInventory, AddItem
+from database.read import GetItem
+from database import get_inventory
 from datum.entity import Player
 from datum.items import small_health_potion, large_health_potion, short_sword, Item
 from datum.inventory import InventoryItemProperties, Inventory
@@ -32,7 +33,7 @@ def test_if_inventories_are_equal():
         InventoryItemProperties(id=small_health_potion.id, amount=1),
         InventoryItemProperties(id=large_health_potion.id, amount=1)
     ])
-    assert GetInventory.execute(1) == inventory
+    assert get_inventory(1) == inventory
 
 
 def test_shop():
@@ -67,3 +68,16 @@ def test_shop():
 
     with pytest.raises(ValueError):
         shop.buy(1, 1)
+
+
+def test_info():
+    # short_sword.get_info()
+    inventory = Inventory(id=1, items=[
+        InventoryItemProperties(id=small_health_potion.id, amount=1),
+        InventoryItemProperties(id=large_health_potion.id, amount=1)
+    ])
+    inventory.display_information_of_items()
+
+
+def test_add_items():
+    AddItem.execute(large_health_potion)
