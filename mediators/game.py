@@ -2,6 +2,7 @@ import random
 
 import database
 from datum.entity import Mob, Player
+from datum.items import stick
 from mediators.shop import Shop
 
 
@@ -89,19 +90,22 @@ def menu():
                 player = input("Player Name: ")
                 if player.isalpha():
                     play(Player(
-                        id=,
-                        name=,
-                        level=,
-                        current_health=,
-                        damage=,
-                        inventory_id=,
-                        equipped_item=,
-                        gold_balance=
+                        id=1,
+                        name=player,
+                        level=1,
+                        current_health=100,
+                        damage=10,
+                        inventory_id=1,
+                        equipped_item=stick.id,
+                        gold_balance=300
                     ))
                 else:
                     print("Player Name Must Be Alphabetical".center(160))
         elif option == '2':
-            pass
+            player = ''
+            if player == '':
+                pass
+            elif player ==
         else:
             print("Invalid Choice".center(160))
 
