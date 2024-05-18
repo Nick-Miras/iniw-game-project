@@ -49,7 +49,7 @@ class Shop:
         return self.player
 
 
-shop_inventory = Inventory(
+shop_inventory_1 = Inventory(
     id=400,
     items=[
         InventoryItemProperties(id=short_sword.id, amount=1),
