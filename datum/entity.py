@@ -15,7 +15,6 @@ from pydantic import Field, BaseModel, field_validator
 from typing import Any
 from typing_extensions import Annotated
 
-from mediators.actions import Attack
 
 
 class Entity(BaseModel):

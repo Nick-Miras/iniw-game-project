@@ -1,7 +1,6 @@
 import random
 from datum.entity import Mob
 
-
 class Game:
     def __init__(self, player):
         # Define the mobs
@@ -62,3 +61,61 @@ class Game:
                         print("Invalid option.")
                 else:
                     print("Invalid input. Please enter a number.")
+
+def menu():
+    #ui for menu
+    print("-=Iniw Game=-".center(160))
+    print("1.New Game".center(160))
+    print("2.Continue".center(160))
+    while True:
+        option = input("Enter Choice:")
+        if option == '1':
+            play()
+        elif option == '2':
+            pass
+        else:
+            print("Invalid Choice".center(160))
+def play ():
+    #ui for what the player want to choose after every battle
+    print("1. Dungeon".center(160))
+    print("2. Shop".center(160))
+    while True:
+        option = input("Enter Choice")
+        if option == '1':
+            game_actions()
+        elif option == '2':
+            pass
+        else:
+            print("Invalid Choice".center(160))
+
+def game_actions():
+    #ui in game actions
+    print("1. Attack")
+    print("2. Inventory")
+    print("3. Show Player info")
+    while True:
+        option = input("Enter Choice: ")
+        if option == '1':
+            game_attack_actions()
+        elif option == '2':
+            pass
+        elif option == '3':
+            pass
+        else:
+            print("Invalid Choice".center(160))
+
+def game_attack_actions():
+    print("1. Basic Attack".center(160))
+    print("2. Skill Attack".center(160))
+    print("3. Ultimate Attack".center(160))
+    while True:
+        option =  input("Enter Choice: ")
+        if option == '1':
+            pass
+        elif option == '2':
+            pass
+        elif option == '3':
+            pass
+
+
+
