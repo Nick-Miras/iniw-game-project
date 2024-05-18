@@ -1,9 +1,11 @@
+from textwrap import dedent
+
 from pydantic import Field, BaseModel
 
 from typing_extensions import Annotated
 
 from custom_types import ID
-from datum.enumerations import MetadataType, AttackType
+from datum.enumerations import MetadataType
 
 
 class ItemTypeMetadata(BaseModel):
@@ -23,18 +25,15 @@ class Item(BaseModel):
     reusable: Annotated[bool, Field(default=False)]
     metadata: list[ItemTypeMetadata]
 
-
-def perform_player_calculation_with_metadata(metadata: ItemTypeMetadata, player_damage: float, attack_type: AttackType) -> float:
-    match metadata.item_type:
-        case MetadataType.BaseDamage.value:
-            player_damage += metadata.data
-        case MetadataType.DamageMultiplier.value:
-            if attack_type == AttackType.SkillAttack:
-                player_damage *= metadata.data
-        case MetadataType.UltimateDamageMultiplier.value:
-            if attack_type == AttackType.UltimateAttack:
-                player_damage *= metadata.data
-    return player_damage
+    def get_info(self):
+        info = dedent(f"""
+        ========================================================================
+        Item Name: {self.name}
+        Item Description: {self.description}
+        Item Stats: 
+        ========================================================================
+        """)
+        print(info)
 
 #########
 # Weapons
@@ -71,6 +70,10 @@ large_health_potion = Item(id=5, name='Large Health Potion', price=50, metadata=
 ult_potion = Item(id=6, name='Ultimate Potion', price=75, metadata=[
     ItemTypeMetadata(item_type=MetadataType.UltimateEnabler, data=1)  # 1 means true
 ])
+
+##############################
+# Duration Of Enemy Engagement
+##############################
 
 double_damage_potion = Item(id=7, name='Damage Double Potion', price=25, metadata=[
     ItemTypeMetadata(item_type=MetadataType.DamageMultiplier, data=2)
