@@ -84,9 +84,13 @@ def menu():
     print("2.Continue".center(160))
     while True:
         option = input("Enter Choice:")
-        player =
         if option == '1':
-            play()
+            while True:
+                player = input("Player Name: ")
+                if player.isalpha():
+                    play()
+                else:
+                    print("Player Name Must Be Alphabetical".center(160))
         elif option == '2':
             pass
         else:
@@ -102,7 +106,7 @@ def play(player):
         if option == '1':
             game_actions()
         elif option == '2':
-            shop =
+            shop = Shop(player)
         else:
             print("Invalid Choice".center(160))
 
