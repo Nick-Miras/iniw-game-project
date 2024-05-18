@@ -1,10 +1,15 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
 from datum.enumerations import AttackType, MetadataType
-from database import GetItem
+import database
 from datum.items import ItemTypeMetadata
+
+if TYPE_CHECKING:
+    from datum.entity import Mob
 
 
 def calculate_player_damage(player, attack_type: AttackType) -> float:
-    equipped_item = GetItem.execute(player.equipped_item)
+    equipped_item = database.get_item(player.equipped_item)
 
     player_damage = player.damage
     for metadata in equipped_item.metadata:
@@ -13,13 +18,13 @@ def calculate_player_damage(player, attack_type: AttackType) -> float:
     return player_damage
 
 
-def get_selected_mob(enemies: list['Mob']):
+def get_selected_mob(enemies: list[Mob]):
     for mob in enemies:
         if mob.is_target_mob is True:
             return mob
 
 
-def attack(player, enemies: list['Mob'], attack_type: AttackType):
+def attack(player, enemies: list[Mob], attack_type: AttackType):
     target_mob = get_selected_mob(enemies)
     target_mob.current_health -= calculate_player_damage(player, attack_type)
     if target_mob.current_health <= 0:

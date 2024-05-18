@@ -1,11 +1,16 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
 from custom_types import ID
-from database import GetInventory, GetItem
+import database
 from database.update import UpdateInventory
 from datum.enumerations import MetadataType
 from datum.items import ItemTypeMetadata
 
+if TYPE_CHECKING:
+    from datum.entity import Player
 
-def match_player_modifications(player: 'Player', item_metadata: ItemTypeMetadata):
+
+def match_player_modifications(player: Player, item_metadata: ItemTypeMetadata):
     match item_metadata:
         case MetadataType.HealthRestoration:
             player.current_health *= item_metadata.data
@@ -18,16 +23,16 @@ def match_player_modifications(player: 'Player', item_metadata: ItemTypeMetadata
             player.damage *= item_metadata.data
 
 
-def apply_player_modifications(player: 'Player', item_properties: list[ItemTypeMetadata]):
+def apply_player_modifications(player: Player, item_properties: list[ItemTypeMetadata]):
     for item_metadata in item_properties:
         match_player_modifications(player, item_metadata)
 
 
-def use_item(player: 'Player', item_id: ID):
-    inventory = GetInventory.execute(player.inventory_id)
+def use_item(player: Player, item_id: ID):
+    inventory = database.get_inventory(player.inventory_id)
     inventory.does_item_exist(item_id)
 
-    item = GetItem.execute(item_id)
+    item = database.get_item(item_id)
     if item.reusable is True:
         player.equipped_item = item
     else:
@@ -44,9 +49,9 @@ def clean_player_modifications(item_metadata: ItemTypeMetadata) -> bool:
     return item_metadata.item_type not in (MetadataType.DamageMultiplier, MetadataType.HealthMultiplier)
 
 
-def apply_used_items(player: 'Player'):
+def apply_used_items(player: Player):
     for item_id in player.items_applied:
-        item = GetItem.execute(item_id)
+        item = database.get_item(item_id)
         apply_player_modifications(player, item.metadata)
         if clean_player_modifications(item.metadata) is True:
             player.items_applied.remove(item)

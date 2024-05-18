@@ -47,6 +47,6 @@ class Inventory(BaseModel):
 
     def display_information_of_items(self):
         for item in self.items:
-            item = database.GetItem.execute(item.id)
+            item = database.get_item(item.id)
             item.get_info()
         print("========================================================================")
