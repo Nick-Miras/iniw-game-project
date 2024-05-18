@@ -1,7 +1,7 @@
 import random
 
 import database
-from datum.entity import Mob
+from datum.entity import Mob, Player
 from mediators.shop import Shop
 
 
@@ -88,7 +88,16 @@ def menu():
             while True:
                 player = input("Player Name: ")
                 if player.isalpha():
-                    play()
+                    play(Player(
+                        id=,
+                        name=,
+                        level=,
+                        current_health=,
+                        damage=,
+                        inventory_id=,
+                        equipped_item=,
+                        gold_balance=
+                    ))
                 else:
                     print("Player Name Must Be Alphabetical".center(160))
         elif option == '2':

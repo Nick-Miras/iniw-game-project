@@ -13,7 +13,7 @@ from generics.entity import (
 from mediators.actions import attack, use_item
 
 from pydantic import Field, BaseModel, field_validator
-from typing import Any, TYPE_CHECKING
+from typing import Any, TYPE_CHECKING, Optional
 from typing_extensions import Annotated
 
 
@@ -46,11 +46,11 @@ class Player(Entity):
     inventory_id: ID
     equipped_item: ID
     gold_balance: int
-    experience: Annotated[float, Field(default=0, init=False)]
-    maximum_health: Annotated[int, Field(default=0, init=False)]
-    skill_points: Annotated[int, Field(default=0, init=False)]
-    ultimate_points: Annotated[int, Field(default=0, init=False)]
-    items_applied: Annotated[list[ID], Field(default=[], init=False)]
+    experience: Annotated[Optional[float], Field(default=0, init=False)]
+    maximum_health: Annotated[Optional[int], Field(default=0, init=False)]
+    skill_points: Annotated[Optional[int], Field(default=0, init=False)]
+    ultimate_points: Annotated[Optional[int], Field(default=0, init=False)]
+    items_applied: Annotated[Optional[list[ID]], Field(default=[], init=False)]
 
     @field_validator('equipped_items', check_fields=False)
     @classmethod
