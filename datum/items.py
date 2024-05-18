@@ -1,21 +1,9 @@
 from pydantic import Field, BaseModel
-from enum import Enum
 
 from typing_extensions import Annotated
 
 from custom_types import ID
-
-
-class MetadataType(Enum):
-    # potions
-    HealthRestoration = 'health restoration'
-    HealthMultiplier = 'health multiplier'
-    UltimateEnabler = 'ultimate enabler'
-
-    # weapons
-    BaseDamage = 'base damage'
-    DamageMultiplier = 'damage multiplier'
-    UltimateDamageMultiplier = 'ultimate damage multiplier'
+from datum.enumerations import MetadataType, AttackType
 
 
 class ItemTypeMetadata(BaseModel):
@@ -36,15 +24,17 @@ class Item(BaseModel):
     metadata: list[ItemTypeMetadata]
 
 
-def perform_player_calculation_with_metadata(metadata: ItemTypeMetadata, player: 'Player'):
+def perform_player_calculation_with_metadata(metadata: ItemTypeMetadata, player_damage: float, attack_type: AttackType) -> float:
     match metadata.item_type:
         case MetadataType.BaseDamage.value:
-            player.damage += metadata.data
+            player_damage += metadata.data
         case MetadataType.DamageMultiplier.value:
-            player.damage *= metadata.data
+            if attack_type == AttackType.SkillAttack:
+                player_damage *= metadata.data
         case MetadataType.UltimateDamageMultiplier.value:
-            player.damage *= metadata.data
-    return player
+            if attack_type == AttackType.UltimateAttack:
+                player_damage *= metadata.data
+    return player_damage
 
 #########
 # Weapons

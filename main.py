@@ -1,3 +1,6 @@
+"""
+INIW GAME
+"""
 import random
 from datum.entity import Mob, Entity, Player
 from datum.items import small_health_potion, short_sword

@@ -1,6 +1,7 @@
 from custom_types import ID
 from database.read import GetItem, GetInventory
 from database.update import UpdateInventory
+from datum.enumerations import AttackType
 from generics.entity import (
     calculate_exp_gained_from_enemy_level,
     non_recursively_calculate_total_exp_at_level,
@@ -8,6 +9,7 @@ from generics.entity import (
     calculate_max_health_at_level,
     calculate_damage_at_level
 )
+from mediators.actions import attack
 
 from pydantic import Field, BaseModel, field_validator
 from typing import Any
@@ -60,7 +62,7 @@ class Player(Entity):
         self.current_health = self.maximum_health = calculate_max_health_at_level(self.level)
         self.experience = non_recursively_calculate_total_exp_at_level(self.level)
 
-    def attack(self, target_mobs: list['Mob']):
+    def attack(self, target_mobs: list['Mob'], attack_type: AttackType):
         """
         Simulate an attack by this mob on another mob.
 
@@ -70,7 +72,7 @@ class Player(Entity):
         Returns:
             str: A message describing the attack outcome.
         """
-        Attack.execute(self, target_mobs)
+        attack.attack(self, target_mobs, attack_type)
 
     def level_up(self, enemy_level: int):
         self.experience += calculate_exp_gained_from_enemy_level(enemy_level)
