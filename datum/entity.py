@@ -48,9 +48,10 @@ class Player(Entity):
     damage: Annotated[int, Field(default=0, init=False)]
     experience: Annotated[float, Field(default=0, init=False)]
     maximum_health: Annotated[int, Field(default=0, init=False)]
-    ultimate_points: Annotated[int, Field(default=0, init=False)]  # TODO: Review
+    skill_points: Annotated[int, Field(default=0, init=False)]
+    ultimate_points: Annotated[int, Field(default=0, init=False)]
 
-    @field_validator('equipped_items')
+    @field_validator('equipped_items', check_fields=False)
     @classmethod
     def items_must_exist(cls, v: list[ID]):
         for item in v:
@@ -72,7 +73,24 @@ class Player(Entity):
         Returns:
             str: A message describing the attack outcome.
         """
+        match attack_type:
+            case AttackType.BasicAttack:
+                self.skill_points += 1
+                self.ultimate_points += 1
+            case AttackType.SkillAttack:
+                if self.skill_points < 1:
+                    raise ValueError('You Do Not Have Enough Skill Points To Use A Skill!')
+                self.ultimate_points += 2
+                self.skill_points -= 1
+            case AttackType.UltimateAttack:
+                if self.ultimate_points < 3:
+                    raise ValueError('You Do Not Have Enough Ultimate Points To Use An Ultimate Skill!')
+                self.ultimate_points -= 3
         attack.attack(self, target_mobs, attack_type)
+        if self.ultimate_points > 3:
+            self.ultimate_points = 0
+        if self.skill_points > 5:
+            self.skill_points = 0
 
     def level_up(self, enemy_level: int):
         self.experience += calculate_exp_gained_from_enemy_level(enemy_level)

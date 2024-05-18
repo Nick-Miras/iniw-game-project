@@ -1,9 +1,8 @@
 """
 INIW GAME
 """
-import random
-from datum.entity import Mob, Entity, Player
-from datum.items import small_health_potion, short_sword
+from datum.entity import Player
+from datum.items import short_sword
 from mediators.game import Game
 
 player_name = input("Enter Character Name: ")

@@ -1,5 +1,5 @@
 import random
-from datum.entity import Entity, Mob
+from datum.entity import Mob
 
 
 class Game:
