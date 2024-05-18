@@ -3,8 +3,9 @@ from datum.entity import Entity, Mob
 
 
 class Game:
-    def __init__(self):
+    def __init__(self, player):
         # Define the mobs
+        self.player = player
         self.mobs: list[Mob] = [
             Mob(name="Goblin", damage=10, maximum_health=50, level=1),
             Mob(name="Orc", damage=15, maximum_health=70, level=1),
@@ -51,12 +52,12 @@ class Game:
                 if option.isdigit():
                     option = int(option)
                     if 1 <= option <= len(current_mobs):
-                        selected_mob = current_mobs[option - 1]
+                        selected_mob: Mob = current_mobs[option - 1]
+                        selected_mob.is_target_mob = True
                         # Assuming character is defined elsewhere
-                        character.attack(selected_mob)
-                        print(character.attack(selected_mob))
+                        print(self.player.attack(current_mobs))
                         print(selected_mob.get_info())
-                        break
+                        selected_mob.is_target_mob = False
                     else:
                         print("Invalid option.")
                 else:
