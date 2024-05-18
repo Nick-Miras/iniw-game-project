@@ -78,6 +78,10 @@ class Game:
                 else:
                     print("Invalid input. Please enter a number.")
 
+def initialize_player_and_inventory(player, inventory):
+    database.create_player(player)
+    database.create_inventory(inventory)
+
 def menu():
     #ui for menu
     print("-=Iniw Game=-".center(160))
@@ -87,8 +91,9 @@ def menu():
         option = input("Enter Choice:")
         if option == '1':
             while True:
-                player = input("Player Name: ")
-                if player.isalpha():
+                player_name = input("Player Name: ")
+                if player_name.isalpha():
+                    player =
                     play(Player(
                         id=1,
                         name=player,

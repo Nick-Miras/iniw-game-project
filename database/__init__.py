@@ -5,11 +5,20 @@ from typing import TYPE_CHECKING
 from custom_types import ID
 from .read import GetItem, GetInventory, GetPlayer
 from .delete import DeletePlayer, DeleteInventory
+from .create import AddPlayer, AddInventory
 
 if TYPE_CHECKING:
     from datum.entity import Player
     from datum.inventory import Inventory
     from datum.items import Item
+
+
+def create_inventory(inventory: Inventory):
+    AddInventory.execute(inventory)
+
+
+def create_player(player: Player):
+    AddPlayer.execute(player)
 
 
 def get_item(item_id: ID) -> Item:
