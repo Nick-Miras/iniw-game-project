@@ -107,10 +107,7 @@ def menu():
                 else:
                     print("Player Name Must Be Alphabetical".center(160))
         elif option == '2':
-            player = ''
-            if player == '':
-                pass
-            elif player ==
+            Game()
         else:
             print("Invalid Choice".center(160))
 
@@ -139,9 +136,9 @@ def game_actions():
         if option == '1':
             game_attack_actions()
         elif option == '2':
-            pass
+            game_attack_actions()
         elif option == '3':
-            pass
+            game_attack_actions()
         else:
             print("Invalid Choice".center(160))
 
