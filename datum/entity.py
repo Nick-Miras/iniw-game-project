@@ -1,4 +1,7 @@
 from __future__ import annotations
+
+from textwrap import dedent
+
 from custom_types import ID
 import database
 from database.update import UpdateInventory
@@ -59,6 +62,21 @@ class Player(Entity):
             database.get_item(item)  # raises ValueError if item does not exist
         return v
 
+    def get_info(self):
+
+        return dedent(f"""\
+        Player Name:{self.name}
+        Current Level: {self.level}
+        Current Health: {self.current_health}/{self.maximum_health}
+        Weapon Equiped: {self.equipped_item}
+        Gold Ballance: {self.gold_balance}
+        Skill points{self.skill_points}/5
+        Ult Points{self.ultimate_points}/3""")
+    def current_info(self):
+        return dedent(f"""\
+        Current Health: {self.current_health}/{self.maximum_health}
+        Skill points{self.skill_points}/5
+        Ult Points{self.ultimate_points}/3""")
     def model_post_init(self, __context: Any) -> None:
         self.damage = calculate_damage_at_level(self.level)
         self.current_health = self.maximum_health = calculate_max_health_at_level(self.level)

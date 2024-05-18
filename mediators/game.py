@@ -2,8 +2,9 @@ import random
 
 import database
 from datum.entity import Mob, Player
+from datum.enumerations import AttackType
 from datum.items import stick
-from mediators.shop import Shop
+from mediators.shop import Shop, shop_inventory_1
 
 
 class Game:
@@ -27,8 +28,9 @@ class Game:
             Mob(name="Ogre", damage=15, maximum_health=250, level=random.randint(1, 10)),
             Mob(name="slime", damage=5, maximum_health=70, level=random.randint(1, 10))
         ]
+        self.play()
 
-    def start(self):
+    def start(self, attack_type):
         # Determine the number of enemies based on probabilities
         num_enemies = random.choices([1, 2, 3], weights=[30, 60, 10])[0]
 
@@ -39,22 +41,9 @@ class Game:
         print("Current mobs:", [mob.name for mob in current_mobs])
 
         # Perform actions
-        self.action(current_mobs)
+        self.attack_action(current_mobs, attack_type)
 
-    def action(self, current_mobs):
-        while True:
-            print("Select Action: A. Attack B.Inventory C.Player Info")
-            option = str.upper(input(": "))
-            if option == 'A':
-                self.attack_action(current_mobs)
-            elif option == 'B':
-                pass
-            elif option == 'C':
-                pass
-            else:
-                print("Invalid option.")
-
-    def attack_action(self, current_mobs):
+    def attack_action(self, current_mobs, attack_type):
         while True:
             if not any(mob.current_health > 0 for mob in current_mobs):
                 break
@@ -70,13 +59,56 @@ class Game:
                         selected_mob: Mob = current_mobs[option - 1]
                         selected_mob.is_target_mob = True
                         # Assuming character is defined elsewhere
-                        print(self.player.attack(current_mobs))
+                        print(self.player.attack(current_mobs, attack_type))
                         print(selected_mob.get_info())
                         selected_mob.is_target_mob = False
                     else:
                         print("Invalid option.")
                 else:
                     print("Invalid input. Please enter a number.")
+    def play(self):
+        # ui for what the player want to choose after every battle
+        print("1. Dungeon".center(160))
+        print("2. Shop".center(160))
+        while True:
+            option = input("Enter Choice")
+            if option == '1':
+                self.game_actions()
+            elif option == '2':
+                shop_inventory_1.display_information_of_items()
+            else:
+                print("Invalid Choice".center(160))
+
+    def game_actions(self):
+        # ui in game actions
+        print("1. Attack")
+        print("2. Inventory")
+        print("3. Show Player info")
+        while True:
+            option = input("Enter Choice: ")
+            if option == '1':
+                self.game_attack_actions()
+            elif option == '2':
+                inventory = database.get_inventory(self.player.inventory_id)
+                inventory.display_information_of_items()
+            elif option == '3':
+                self.player.get_info()
+            else:
+                print("Invalid Choice".center(160))
+
+    def game_attack_actions(self):
+        print("1. Basic Attack".center(160))
+        print("2. Skill Attack".center(160))
+        print("3. Ultimate Attack".center(160))
+        while True:
+            option = input("Enter Choice: ")
+            if option == '1':
+                self.start(attack_type=AttackType.BasicAttack)
+            elif option == '2':
+                self.start(attack_type=AttackType.SkillAttack)
+            elif option == '3':
+                self.start(attack_type=AttackType.UltimateAttack)
+
 
 def initialize_player_and_inventory(player, inventory):
     database.create_player(player)
@@ -107,53 +139,9 @@ def menu():
     while True:
         option = input("Enter Choice:")
         if option == '1':
-            game = Game(new_game=True)
+            Game(new_game=True)
         elif option == '2':
-            game = Game(new_game=False)
+            Game(new_game=False)
         else:
             print("Invalid Choice".center(160))
 
-
-def play(player):
-    #ui for what the player want to choose after every battle
-    print("1. Dungeon".center(160))
-    print("2. Shop".center(160))
-    while True:
-        option = input("Enter Choice")
-        if option == '1':
-            game_actions()
-        elif option == '2':
-            shop = Shop(player)
-        else:
-            print("Invalid Choice".center(160))
-
-
-def game_actions():
-    #ui in game actions
-    print("1. Attack")
-    print("2. Inventory")
-    print("3. Show Player info")
-    while True:
-        option = input("Enter Choice: ")
-        if option == '1':
-            game_attack_actions()
-        elif option == '2':
-            pass
-        elif option == '3':
-            pass
-        else:
-            print("Invalid Choice".center(160))
-
-
-def game_attack_actions():
-    print("1. Basic Attack".center(160))
-    print("2. Skill Attack".center(160))
-    print("3. Ultimate Attack".center(160))
-    while True:
-        option = input("Enter Choice: ")
-        if option == '1':
-            pass
-        elif option == '2':
-            pass
-        elif option == '3':
-            pass
