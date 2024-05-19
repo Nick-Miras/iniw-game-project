@@ -2,7 +2,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 from custom_types import ID
 import database
-from database.update import UpdateInventory
 from datum.enumerations import MetadataType
 from datum.items import ItemTypeMetadata
 
@@ -28,25 +27,28 @@ def apply_player_modifications(player: Player, item_properties: list[ItemTypeMet
         match_player_modifications(player, item_metadata)
 
 
-def use_item(player: Player, item_id: ID):
+def use_item(player: Player, item_id: ID) -> None:
     inventory = database.get_inventory(player.inventory_id)
     inventory.does_item_exist(item_id)
 
     item = database.get_item(item_id)
     if item.reusable is True:
-        player.equipped_item = item
+        player.equipped_item = item.id
     else:
-        player.items_applied.append(item)
+        player.items_applied.append(item.id)
+        inventory.update_item_with_amount(item_id, inventory.get_item_properties(item_id).amount - 1)
+    database.update_inventory(inventory)
 
-    UpdateInventory.execute(inventory)
 
-
-def clean_player_modifications(item_metadata: ItemTypeMetadata) -> bool:
+def clean_player_modifications(item_metadata: list[ItemTypeMetadata]) -> bool:
     """
     Returns:
         True if the item should be removed from applied items; false if otherwise.
     """
-    return item_metadata.item_type not in (MetadataType.DamageMultiplier, MetadataType.HealthMultiplier)
+    for metadata in item_metadata:
+        if metadata.item_type in (MetadataType.DamageMultiplier, MetadataType.HealthMultiplier):
+            return True
+    return False
 
 
 def apply_used_items(player: Player):

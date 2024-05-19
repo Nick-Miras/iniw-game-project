@@ -1,33 +1,53 @@
 import json
 from abc import ABC
 from json import JSONDecodeError
+from typing import Generic
 
 from pydantic import BaseModel
 
-from database.abc import CRUD
+from database.abc import CRUD, T
+from datum.entity import Player
 from datum.inventory import Inventory
+from generics.database import find_model_in_collection_with_id
 from generics.file_ops import return_json_data
 
 
-class Create(CRUD, ABC):
+class Update(CRUD, ABC, Generic[T]):
     @staticmethod
-    def update_json_file_with(model: BaseModel, json_file_path: str, add_only: bool):
-        data = return_json_data(json_file_path)
-        if add_only is True and str(model.id) in list(model.keys()) is True:
-            raise ValueError('Inventory ID Already Exists. Cannot Add Existing Model.')
-        data.update({model.id: model.model_dump()})
+    def update_json_file_with(data: BaseModel, json_file_path: str):
+        database_data = return_json_data(f'data/{json_file_path}.json')
+        collection = database_data[json_file_path]
 
-        with open(json_file_path, 'w') as f:
-            json.dump(data, f)
+        if (old_model := find_model_in_collection_with_id(data.id, collection)) is None:
+            raise ValueError(f'Model: id_{data.id} cannot be found!')
+        collection.remove(old_model)
+        collection.append(data.model_dump())
+        database_data.update({json_file_path: collection})
+
+        with open(f'data/{json_file_path}.json', 'w') as f:
+            json.dump(database_data, f)
 
 
-class UpdateInventory(Create):
+class UpdateInventory(Update[Inventory]):
     @classmethod
-    def execute(cls, data: BaseModel):
-        """ Adds Inventory To Database. Can Update Existing Inventories And Add If It Doesn't Exist
+    def execute(cls, data: T):
+        """ Update Existing Inventories
         Args:
             data:`Inventory`
         """
         if isinstance(data, Inventory) is False:
             raise ValueError(f"Argument {type(data)} is not of type {type(BaseModel)}")
-        cls.update_json_file_with(data, 'data/inventories.json', False)
+        cls.update_json_file_with(data, 'inventories')
+
+
+class UpdatePlayer(Update[Player]):
+
+    @classmethod
+    def execute(cls, data: T):
+        """ Update Existing PLayers
+        Args:
+            data:`Player`
+        """
+        if isinstance(data, Player) is False:
+            raise ValueError(f"Argument {type(data)} is not of type {type(BaseModel)}")
+        cls.update_json_file_with(data, 'players')

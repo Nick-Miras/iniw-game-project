@@ -6,6 +6,7 @@ from custom_types import ID
 from .read import GetItem, GetInventory, GetPlayer
 from .delete import DeletePlayer, DeleteInventory
 from .create import AddPlayer, AddInventory
+from .update import UpdateInventory, UpdatePlayer
 
 if TYPE_CHECKING:
     from datum.entity import Player
@@ -22,7 +23,7 @@ def create_player(player: Player):
 
 
 def get_item(item_id: ID) -> Item:
-    return GetPlayer.execute(item_id)
+    return GetItem.execute(item_id)
 
 
 def get_inventory(inventory_id: ID) -> Inventory:
@@ -39,3 +40,10 @@ def delete_player(player: Player) -> None:
 
 def delete_inventory(inventory: Inventory) -> None:
     DeleteInventory.execute(inventory)
+
+
+def update_inventory(inventory: Inventory) -> None:
+    UpdateInventory.execute(inventory)
+
+def update_player(player: Player) -> None:
+    UpdatePlayer.execute(player)

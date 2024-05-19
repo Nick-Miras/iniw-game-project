@@ -30,8 +30,10 @@ class Item(BaseModel):
         stats = '\n'.join(f"{metadatum.item_type.title()}: {metadatum.data}" for metadatum in self.metadata)
         info = dedent(f"""\
         ========================================================================
+        Item ID: {self.id}
         Item Name: {self.name}
         Item Description: {self.description}
+        Item Price: {self.price}
         Item Stats:""")
         print(info)
         print(stats)
@@ -84,3 +86,14 @@ double_damage_potion = Item(id=7, name='Damage Double Potion', price=25, metadat
 absorption_potion = Item(id=9, name='Absorption Potion', price=20, metadata=[
     ItemTypeMetadata(item_type=MetadataType.HealthMultiplier, data=2)
 ])
+
+game_items = [
+    short_sword,
+    stick,
+    small_health_potion,
+    medium_health_potion,
+    large_health_potion,
+    ult_potion,
+    absorption_potion,
+    double_damage_potion
+]

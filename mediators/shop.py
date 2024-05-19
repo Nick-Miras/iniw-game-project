@@ -29,7 +29,7 @@ class Shop:
     def _is_item_in_inventory(self, item_id: int) -> bool:
         return self.shop_inventory.does_item_exist(item_id)
 
-    def buy(self, item_id: int, amount: int) -> Player:
+    def buy(self, item_id: int, amount: int) -> None:
         if self._is_item_in_inventory(item_id) is False:
             raise ValueError('Item Is Not In Shop Inventory.')
 
@@ -46,7 +46,7 @@ class Shop:
         self.shop_inventory.update_item_with_amount(
             item_id, self.shop_inventory.get_item_properties(item_id).amount - amount
         )
-        return self.player
+        database.update_inventory(player_inventory)
 
 
 shop_inventory_1 = Inventory(

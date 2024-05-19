@@ -46,7 +46,9 @@ class Inventory(BaseModel):
         raise ValueError('Item is not found in inventory!')
 
     def display_information_of_items(self):
-        for item in self.items:
-            item = database.get_item(item.id)
-            item.get_info()
+        for item_info in self.items:
+            if item_info.amount != 0:
+                item = database.get_item(item_info.id)
+                item.get_info()
+                print(f"Item Amount: {item_info.amount}")
         print("========================================================================")

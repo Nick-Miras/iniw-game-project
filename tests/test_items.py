@@ -2,7 +2,7 @@ from database.create import AddInventory, AddItem
 from database.read import GetItem
 from database import get_inventory
 from datum.entity import Player
-from datum.items import small_health_potion, large_health_potion, short_sword, Item
+from datum.items import small_health_potion, large_health_potion, short_sword, Item, game_items
 from datum.inventory import InventoryItemProperties, Inventory
 from mediators.shop import Shop
 import pytest
@@ -80,4 +80,8 @@ def test_info():
 
 
 def test_add_items():
-    AddItem.execute(large_health_potion)
+    for item in game_items:
+        try:
+            AddItem.execute(item)
+        except ValueError:
+            pass

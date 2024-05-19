@@ -1,1 +1,1 @@
-{"players": []}
+{"players": [{"id": 1, "name": "usd", "maximum_health": 105, "level": 1, "current_health": 105, "damage": 2, "inventory_id": 1, "equipped_item": 2, "gold_balance": 9999300, "experience": 40, "skill_points": 0, "ultimate_points": 0, "items_applied": []}]}

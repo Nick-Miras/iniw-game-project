@@ -4,7 +4,6 @@ from textwrap import dedent
 
 from custom_types import ID
 import database
-from database.update import UpdateInventory
 from datum.enumerations import AttackType
 from generics.entity import (
     calculate_exp_gained_from_enemy_level,
@@ -13,6 +12,7 @@ from generics.entity import (
     calculate_max_health_at_level,
     calculate_damage_at_level
 )
+from mediators import actions
 from mediators.actions import attack, use_item
 
 from pydantic import Field, BaseModel, field_validator
@@ -38,7 +38,7 @@ class Entity(BaseModel):
         Returns:
             str: A message with current and maximum health.
         """
-        return f"{self.name} - Current Level: {self.level} - Current Health: {self.current_health}/{self.maximum_health}"
+        return f"{self.name} - Current Level: {self.level} - Current Health: {round(self.current_health, 2)}/{self.maximum_health}"
 
 
 class Mob(Entity):
@@ -50,7 +50,7 @@ class Player(Entity):
     equipped_item: ID
     gold_balance: int
     experience: Annotated[Optional[float], Field(default=0, init=False)]
-    maximum_health: Annotated[Optional[int], Field(default=0, init=False)]
+    maximum_health: int
     skill_points: Annotated[Optional[int], Field(default=0, init=False)]
     ultimate_points: Annotated[Optional[int], Field(default=0, init=False)]
     items_applied: Annotated[Optional[list[ID]], Field(default=[], init=False)]
@@ -66,23 +66,23 @@ class Player(Entity):
         info = (f"Player Info:\n"
         f"Player Name:{self.name}\n"
         f"Current Level: {self.level}\n"
+        f"Total Experince Gained: {self.experience}\n"
         f"Current Health: {self.current_health}/{self.maximum_health}\n"
         f"Weapon Equiped: {self.equipped_item}\n"
         f"Gold Ballance: {self.gold_balance}\n")
-
-        print(info)
         return info
+
     def current_info(self):
         c_info = (f"Current Player Info:\n"
         f"Current Health: {self.current_health}/{self.maximum_health}\n"
         f"Skill points: {self.skill_points}/5\n"
         f"Ult Points: {self.ultimate_points}/3\n")
-
-        print(c_info)
         return c_info
+
     def model_post_init(self, __context: Any) -> None:
         self.damage = calculate_damage_at_level(self.level)
-        self.current_health = self.maximum_health = calculate_max_health_at_level(self.level)
+        self.maximum_health += calculate_max_health_at_level(self.level)
+        self.current_health = self.maximum_health
         self.experience = non_recursively_calculate_total_exp_at_level(self.level)
 
     def attack(self, target_mobs: list[Mob], attack_type: AttackType):
@@ -116,8 +116,8 @@ class Player(Entity):
             self.skill_points = 0
 
     def use_item(self, item_id: ID):
-        use_item.use_item(self, item_id)
-        use_item.apply_used_items(self)
+        actions.use_item(self, item_id)
+        actions.apply_used_items(self)
 
     def level_up(self, enemy_level: int):
         self.experience += calculate_exp_gained_from_enemy_level(enemy_level)
@@ -132,4 +132,4 @@ class Player(Entity):
             raise ValueError("Item Amount To Sell Exceeds Inventory's Current Amount")
 
         inventory.update_item_with_amount(current_amount - amount)
-        UpdateInventory.execute(inventory)
+        database.update_inventory(inventory)

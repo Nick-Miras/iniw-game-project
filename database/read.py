@@ -15,7 +15,7 @@ class Read(CRUD[ID], ABC):
         database_data = return_json_data(f'data/{database_file}.json')
         collection = database_data[database_file]
         if model_id not in (model['id'] for model in collection):
-            raise ValueError(f'Item: id_{model_id} cannot be found!')
+            raise ValueError(f'Model: id_{model_id} cannot be found!')
 
         return find_model_in_collection_with_id(model_id, collection)
 

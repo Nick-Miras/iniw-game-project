@@ -1,15 +1,1 @@
-{
-    "inventories": [{
-        "id": 1,
-        "items": [
-            {
-                "id": 3,
-                "amount": 1
-            },
-            {
-                "id": 5,
-                "amount": 1
-            }
-        ]
-    }]
-}
+{"inventories": [{"id": 1, "items": [{"id": 2, "amount": 1}, {"id": 3, "amount": 0}]}]}

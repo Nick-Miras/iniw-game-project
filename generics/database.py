@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel
 
 from custom_types import ID
@@ -10,7 +12,8 @@ def check_if_exists(id_: ID, file_name: str) -> bool:
     return id_ in (model['id'] for model in collection)
 
 
-def find_model_in_collection_with_id(model_id: ID, collection: list[dict]) -> dict:
+def find_model_in_collection_with_id(model_id: ID, collection: list[dict]) -> Optional[dict]:
     for model in collection:
         if model['id'] == model_id:
             return model
+    return
